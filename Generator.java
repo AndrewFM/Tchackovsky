@@ -215,16 +215,33 @@ public class Generator {
 				nonTonicEncountered = true;
 			root = new Note(rootToPitch(nextRoot,keySignature), 4, cDuration, keySignature);
 			
+			int octOffset = 0;
 			//Let V chords have a chance of being 7th-chords.
 			if (nextRoot == V && rand < 0.4) {
-				c = new Chord(root, Note.shiftINote(root, 2), Note.shiftINote(root, 4), Note.shiftINote(root, 6));
+				rand = Math.random();
+				if (rand < 0.1)
+					octOffset = 1;
+				else if (rand < 0.2)
+					octOffset = 3;
+				else if (rand < 0.3)
+					octOffset = 5;
+				c = new Chord(root, Note.shiftINote(root, 2), Note.shiftINote(root, 4), Note.shiftINote(root, 6+octOffset));
 				rand = Math.random();
 			}
-			else
-				c = new Chord(root, Note.shiftINote(root, 2), Note.shiftINote(root, 4));
+			else {
+				rand = Math.random();
+				if (rand < 0.05)
+					octOffset = 2;
+				else if (rand < 0.1)
+					octOffset = 5;
+				else if (rand < 0.15)
+					octOffset = 7;	
+				c = new Chord(root, Note.shiftINote(root, 2), Note.shiftINote(root, 4+octOffset));
+			}
 
+			rand = Math.random();
 			//Random chord inversions.
-			if (rand < 0.5) {
+			if (rand < 0.65) {
 				rand = Math.random();
 				if (rand < 0.5)
 					c.invert((int)Math.ceil(Math.random()*(double)(c.chordNotes.size()-1)));
